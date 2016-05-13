@@ -1,0 +1,34 @@
+{
+  "name": "mysql-pro",
+  "version": "1.0.0",
+  "description": "drive mysql with promise",
+  "keywords": [
+    "mysql",
+    "promise",
+    "es6",
+    "es2015"
+  ],
+  "homepage": "https://github.com/shhhplus",
+  "main": "index.js",
+  "author": {
+    "name": "shhhplus"
+  },
+  "bugs": {
+    "url": "https://github.com/shhhplus/mysql-promise/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shhhplus/mysql-promise.git"
+  },
+  "scripts": {
+    "test": "node ./test/run.js",
+    "test-cov": "istanbul cover _mocha ./test/cover.js --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "dependencies": {
+    "mysql": "^2.10.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "co": "^4.6.0"
+  }
+}
