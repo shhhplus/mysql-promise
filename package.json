@@ -1,12 +1,17 @@
 {
   "name": "mysql-pro",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "drive mysql with promise",
   "keywords": [
     "mysql",
     "promise",
+    "generator",
+    "async",
+    "await",
+    "yield",
     "es6",
-    "es2015"
+    "es2015",
+    "transaction"
   ],
   "homepage": "https://github.com/shhhplus",
   "main": "index.js",
