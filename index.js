@@ -1,24 +1,18 @@
 "use strict";
 
 let mysql = require("mysql");
+let Transaction = require("./libs/transaction.js");
 
 class Client {
     constructor(options) {
         this._options = options;
-        this._connection = null;
-        this._transacting = null;
-    }
-
-    getConnection() {
-        if (!this._connection)
-            this._connection = mysql.createConnection(this._options.mysql);
-        return this._connection;
+        this._transaction = null;
     }
 
     query(sql, params) {
         let _this = this;
         return new Promise(function (resolve, reject) {
-            let connection = _this.getConnection();
+            let connection = mysql.createConnection(_this._options.mysql);
             connection.connect();
             connection.query(sql, params, function (error, rows, fields) {
                 if (error) {
@@ -32,51 +26,16 @@ class Client {
     }
 
     startTransaction() {
-        this._transacting = true;
-        let _this = this;
-        return new Promise(function (resolve, reject) {
-            let connection = _this.getConnection();
-            connection.beginTransaction(function (error) {
-                if (error) {
-                    return reject(error);
-                }
-
-                return resolve();
-            });
-        });
+        this._transaction = new Transaction(this._options.mysql);
+        return this._transaction.start();
     }
 
     executeTransaction(sql, params) {
-        let _this = this;
-        return new Promise(function (resolve, reject) {
-            let connection = _this.getConnection();
-            connection.query(sql, params, function (error, rows, fields) {
-                if (error) {
-                    return connection.rollback(function(){
-                        reject(error);
-                    });
-                }
-
-                return resolve(rows);
-            });
-        });
+        return this._transaction.execute(sql, params);
     }
 
     stopTransaction() {
-        this._transacting = false;
-        let _this = this;
-        return new Promise(function (resolve, reject) {
-            let connection = _this.getConnection();
-            connection.commit(function (error) {
-                if (error) {
-                    return connection.rollback(function () {
-                        reject(error);
-                    });
-                }
-
-                return resolve();
-            });
-        });
+        return this._transaction.stop();
     }
 }
 
